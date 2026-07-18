@@ -10,6 +10,7 @@
         public DateTime CheckOutDate { get; set; }
         public decimal TotalPrice { get; set; }
         public string Status { get; set; } = "Pending";
+        public string PaymentMethod { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ApplicationUser User { get; set; } = null!;

@@ -7,11 +7,13 @@ namespace HotelBookingAPI.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -27,7 +29,7 @@ namespace HotelBookingAPI.Middleware
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             context.Response.ContentType = "application/json";
 
@@ -41,11 +43,17 @@ namespace HotelBookingAPI.Middleware
 
             context.Response.StatusCode = statusCode;
 
+            // Never expose raw exception details for unexpected (500) errors outside
+            // Development — they can leak SQL, connection strings or stack details.
+            var message = statusCode == (int)HttpStatusCode.InternalServerError && !_env.IsDevelopment()
+                ? "An unexpected error occurred. Please try again later."
+                : ex.Message;
+
             var response = new
             {
                 success = false,
-                message = ex.Message,
-                statusCode = statusCode
+                message,
+                statusCode
             };
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(response));
