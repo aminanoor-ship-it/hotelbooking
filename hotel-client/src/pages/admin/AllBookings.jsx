@@ -1,0 +1,121 @@
+import { useState } from 'react'
+import StatusBadge from '../../components/ui/StatusBadge'
+import Spinner from '../../components/ui/Spinner'
+import ErrorState from '../../components/ui/ErrorState'
+import IconAction from '../../components/Admin/IconAction'
+import { CheckIcon, CloseIcon } from '../../components/Admin/AdminIcons'
+import { useAdminBookings } from '../../hooks/useAdminBookings'
+import api from '../../api/client'
+
+export default function AllBookings() {
+  const { bookings, loading, error, refresh } = useAdminBookings()
+  const [actionError, setActionError] = useState('')
+  const [actingId, setActingId] = useState(null)
+
+  async function handleConfirm(booking) {
+    setActionError('')
+    setActingId(booking.id)
+    try {
+      await api.put(`/bookings/${booking.id}/confirm`)
+      refresh()
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Could not confirm this booking.')
+    } finally {
+      setActingId(null)
+    }
+  }
+
+  async function handleReject(booking) {
+    setActionError('')
+    setActingId(booking.id)
+    try {
+      await api.put(`/bookings/${booking.id}/reject`)
+      refresh()
+    } catch (err) {
+      setActionError(err.response?.data?.message || 'Could not reject this booking.')
+    } finally {
+      setActingId(null)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <h2 className="font-display text-xl text-ink">All Bookings</h2>
+
+      {loading && <Spinner label="Loading bookings…" />}
+      {!loading && error && <ErrorState onRetry={refresh} />}
+      {actionError && <p className="text-sm text-red-600">{actionError}</p>}
+
+      {!loading && !error && (
+        <div className="overflow-x-auto rounded-3xl bg-white shadow-sm shadow-ink/5">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/50">
+              <tr>
+                <th className="px-6 py-4">Guest</th>
+                <th className="px-6 py-4">Hotel</th>
+                <th className="px-6 py-4">Room</th>
+                <th className="px-6 py-4">Dates</th>
+                <th className="px-6 py-4">Total</th>
+                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((booking) => (
+                <tr key={booking.id} className="border-b border-ink/5 last:border-0">
+                  <td className="px-6 py-4 text-ink">
+                    <div className="flex flex-col">
+                      <span className="font-medium">{booking.user?.fullName}</span>
+                      <span className="text-xs text-ink/50">{booking.user?.email}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-ink/60">{booking.hotel?.name}</td>
+                  <td className="px-6 py-4 text-ink/60">{booking.room?.roomType}</td>
+                  <td className="px-6 py-4 text-ink/60">
+                    {new Date(booking.checkInDate).toLocaleDateString()} →{' '}
+                    {new Date(booking.checkOutDate).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-ink/60">${booking.totalPrice.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={booking.status} />
+                  </td>
+                  <td className="px-6 py-4">
+                    {booking.status === 'Pending' ? (
+                      <div className="flex justify-end gap-1">
+                        <IconAction
+                          label="Confirm"
+                          tone="success"
+                          onClick={() => handleConfirm(booking)}
+                          disabled={actingId === booking.id}
+                        >
+                          <CheckIcon />
+                        </IconAction>
+                        <IconAction
+                          label="Reject"
+                          tone="danger"
+                          onClick={() => handleReject(booking)}
+                          disabled={actingId === booking.id}
+                        >
+                          <CloseIcon />
+                        </IconAction>
+                      </div>
+                    ) : (
+                      <div className="flex justify-end text-ink/30">—</div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {bookings.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-ink/50">
+                    No bookings yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}

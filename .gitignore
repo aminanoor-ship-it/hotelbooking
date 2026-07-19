@@ -7,6 +7,10 @@ dist-ssr/
 *.dll
 *.pdb
 
+# Uploaded hotel images (keep the folder, ignore contents)
+HotelBookingAPI/HotelBookingAPI/wwwroot/uploads/hotels/*
+!HotelBookingAPI/HotelBookingAPI/wwwroot/uploads/hotels/.gitkeep
+
 # Dependencies
 node_modules/
 
