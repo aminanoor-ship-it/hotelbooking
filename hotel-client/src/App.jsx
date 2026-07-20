@@ -17,6 +17,7 @@ import ManageHotels from './pages/admin/ManageHotels'
 import ManageRooms from './pages/admin/ManageRooms'
 import AllBookings from './pages/admin/AllBookings'
 import ManageUsers from './pages/admin/ManageUsers'
+import NotFound from './pages/NotFound'
 
 function App() {
   return (
@@ -61,6 +62,8 @@ function App() {
             <Route path="bookings" element={<AllBookings />} />
             <Route path="users" element={<ManageUsers />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

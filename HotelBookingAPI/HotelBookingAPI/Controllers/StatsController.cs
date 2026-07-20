@@ -9,7 +9,7 @@ namespace HotelBookingAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [AllowAnonymous] // public aggregate counts shown on the landing page's "By The Numbers" section
     public class StatsController : ControllerBase
     {
         private readonly AppDbContext _context;

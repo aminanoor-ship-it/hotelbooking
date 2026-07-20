@@ -16,7 +16,7 @@ export default function Hero() {
             Find your perfect stay, every time.
           </h1>
           <p className="hero-copy max-w-md text-base text-ink/60">
-            Horizon Stays curates hand-picked hotels, resorts and villas so
+            Sahal Stay curates hand-picked hotels, resorts and villas so
             booking your next trip takes minutes, not hours.
           </p>
           <div className="flex flex-wrap items-center gap-4">

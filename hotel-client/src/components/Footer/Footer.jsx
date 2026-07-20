@@ -1,4 +1,5 @@
 import FooterColumn from './FooterColumn'
+import Logo from '../ui/Logo'
 import { SocialIcon } from '../ui/Icons'
 import { footerColumns, contactInfo } from '../../data/content'
 
@@ -10,7 +11,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-14">
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
           <div className="flex flex-col gap-3">
-            <span className="font-display text-lg font-semibold text-cream">Horizon Stays</span>
+            <Logo textClassName="text-cream" />
             <p className="max-w-xs text-sm text-cream/50">
               Curated hotels, resorts and villas — book your next stay in minutes.
             </p>
@@ -33,7 +34,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col-reverse items-center justify-between gap-6 border-t border-cream/10 pt-6 sm:flex-row">
-          <span className="text-xs text-cream/40">© {new Date().getFullYear()} Horizon Stays. All rights reserved.</span>
+          <span className="text-xs text-cream/40">© {new Date().getFullYear()} Sahal Stay. All rights reserved.</span>
           <div className="flex gap-3">
             {socials.map((name) => (
               <a

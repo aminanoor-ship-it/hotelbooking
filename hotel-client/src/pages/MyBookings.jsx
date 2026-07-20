@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import Navbar from '../components/Navbar'
 import SectionHeading from '../components/ui/SectionHeading'
+import SearchInput from '../components/ui/SearchInput'
 import BookingCard from '../components/Bookings/BookingCard'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
@@ -8,6 +10,16 @@ import { useMyBookings } from '../hooks/useMyBookings'
 
 export default function MyBookings() {
   const { bookings, loading, error, refresh } = useMyBookings()
+  const [query, setQuery] = useState('')
+
+  const q = query.trim().toLowerCase()
+  const filteredBookings = q
+    ? bookings.filter((booking) =>
+        [booking.hotel?.name, booking.room?.roomType, booking.status].some((v) =>
+          v?.toLowerCase().includes(q),
+        ),
+      )
+    : bookings
 
   return (
     <div className="min-h-screen bg-cream">
@@ -23,11 +35,28 @@ export default function MyBookings() {
             <EmptyState title="No bookings yet" description="Browse our hotels and book your first stay." />
           )}
 
-          <div className="flex flex-col gap-4">
-            {bookings.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} onChanged={refresh} />
-            ))}
-          </div>
+          {!loading && !error && bookings.length > 0 && (
+            <>
+              <SearchInput
+                value={query}
+                onChange={setQuery}
+                placeholder="Search by hotel, room type or status…"
+              />
+
+              {filteredBookings.length === 0 ? (
+                <EmptyState
+                  title="No matching bookings"
+                  description="Try a different hotel name, room type or status."
+                />
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {filteredBookings.map((booking) => (
+                    <BookingCard key={booking.id} booking={booking} onChanged={refresh} />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
     </div>

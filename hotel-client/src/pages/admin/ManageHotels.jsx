@@ -4,6 +4,7 @@ import Modal from '../../components/ui/Modal'
 import Spinner from '../../components/ui/Spinner'
 import ErrorState from '../../components/ui/ErrorState'
 import HotelForm from '../../components/Admin/HotelForm'
+import SearchInput from '../../components/ui/SearchInput'
 import IconAction from '../../components/Admin/IconAction'
 import { EditIcon, DeleteIcon } from '../../components/Admin/AdminIcons'
 import { useHotels } from '../../hooks/useHotels'
@@ -11,6 +12,7 @@ import api from '../../api/client'
 
 export default function ManageHotels() {
   const { hotels, loading, error, refresh } = useHotels()
+  const [query, setQuery] = useState('')
   const [modalState, setModalState] = useState(null) // null | 'add' | hotel object
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
@@ -42,6 +44,13 @@ export default function ManageHotels() {
     }
   }
 
+  const q = query.trim().toLowerCase()
+  const filteredHotels = q
+    ? hotels.filter((hotel) =>
+        [hotel.name, hotel.location, hotel.description].some((v) => v?.toLowerCase().includes(q)),
+      )
+    : hotels
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -50,6 +59,15 @@ export default function ManageHotels() {
           Add Hotel
         </Button>
       </div>
+
+      {!loading && !error && (
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Search by name or location…"
+          className="max-w-md"
+        />
+      )}
 
       {loading && <Spinner label="Loading hotels…" />}
       {!loading && error && <ErrorState onRetry={refresh} />}
@@ -67,7 +85,7 @@ export default function ManageHotels() {
               </tr>
             </thead>
             <tbody>
-              {hotels.map((hotel) => (
+              {filteredHotels.map((hotel) => (
                 <tr key={hotel.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-6 py-4 font-medium text-ink">{hotel.name}</td>
                   <td className="px-6 py-4 text-ink/60">{hotel.location}</td>
@@ -91,10 +109,10 @@ export default function ManageHotels() {
                   </td>
                 </tr>
               ))}
-              {hotels.length === 0 && (
+              {filteredHotels.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-ink/50">
-                    No hotels yet.
+                    {hotels.length === 0 ? 'No hotels yet.' : 'No hotels match your search.'}
                   </td>
                 </tr>
               )}

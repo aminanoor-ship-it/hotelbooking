@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import TextField from '../components/ui/TextField'
+import Logo from '../components/ui/Logo'
 import { ArrowIcon } from '../components/ui/Icons'
 import api from '../api/client'
 
@@ -56,9 +57,8 @@ export default function ResetPassword() {
       <div className="relative flex min-h-dvh items-center justify-center px-4 py-4 sm:px-6 lg:justify-end lg:px-0 lg:py-0">
         <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-sm border border-white/10 bg-black/35 px-5 py-5 shadow-2xl backdrop-blur-md sm:px-7 sm:py-6 lg:flex lg:min-h-dvh lg:w-1/2 lg:max-w-none lg:items-center lg:justify-center lg:rounded-none lg:border-y-0 lg:border-r-0 lg:bg-black/30 lg:px-10 lg:py-0">
           <div className="w-full max-w-sm">
-          <Link to="/" className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-white/85 hover:text-white">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-ink">H</span>
-            Horizon Stays
+          <Link to="/" className="mb-4 inline-flex">
+            <Logo textClassName="text-white" />
           </Link>
 
           <h1 className="mb-2 text-center font-display text-3xl font-semibold text-white sm:text-4xl">Reset Password</h1>

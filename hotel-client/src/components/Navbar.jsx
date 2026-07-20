@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from './ui/Button'
+import Logo from './ui/Logo'
 import { useAuth } from '../context/useAuth'
 import { navLinks } from '../data/content'
 
@@ -25,9 +26,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/5 bg-cream/90 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold text-ink">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest text-cream">✦</span>
-          Horizon Stays
+        <Link to="/" className="flex items-center">
+          <Logo textClassName="text-ink" />
         </Link>
 
         <ul className="hidden items-center gap-8 text-sm font-medium text-ink/80 md:flex">

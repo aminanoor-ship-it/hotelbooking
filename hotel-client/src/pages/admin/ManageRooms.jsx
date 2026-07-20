@@ -4,6 +4,7 @@ import Modal from '../../components/ui/Modal'
 import Spinner from '../../components/ui/Spinner'
 import ErrorState from '../../components/ui/ErrorState'
 import RoomForm from '../../components/Admin/RoomForm'
+import SearchInput from '../../components/ui/SearchInput'
 import IconAction from '../../components/Admin/IconAction'
 import { EditIcon, DeleteIcon } from '../../components/Admin/AdminIcons'
 import { useHotels } from '../../hooks/useHotels'
@@ -12,6 +13,7 @@ import api from '../../api/client'
 export default function ManageRooms() {
   const { hotels, loading, error, refresh } = useHotels()
   const [selectedHotelId, setSelectedHotelId] = useState('')
+  const [query, setQuery] = useState('')
   const [modalState, setModalState] = useState(null) // null | 'add' | room object
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
@@ -19,6 +21,12 @@ export default function ManageRooms() {
 
   const selectedHotel = hotels.find((hotel) => String(hotel.id) === String(selectedHotelId))
   const rooms = selectedHotel?.rooms || []
+  const q = query.trim().toLowerCase()
+  const filteredRooms = q
+    ? rooms.filter((room) =>
+        [room.roomType, room.description, String(room.capacity)].some((v) => v?.toLowerCase().includes(q)),
+      )
+    : rooms
 
   async function handleSave(form) {
     const payload = { ...form, hotelId: Number(selectedHotelId) }
@@ -80,6 +88,15 @@ export default function ManageRooms() {
       )}
 
       {!loading && !error && selectedHotelId && (
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Search rooms by type…"
+          className="max-w-md"
+        />
+      )}
+
+      {!loading && !error && selectedHotelId && (
         <div className="overflow-hidden rounded-3xl bg-white shadow-sm shadow-ink/5">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-ink/10 text-xs uppercase tracking-wide text-ink/50">
@@ -91,7 +108,7 @@ export default function ManageRooms() {
               </tr>
             </thead>
             <tbody>
-              {rooms.map((room) => (
+              {filteredRooms.map((room) => (
                 <tr key={room.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-6 py-4 font-medium text-ink">{room.roomType}</td>
                   <td className="px-6 py-4 text-ink/60">${room.pricePerNight.toFixed(2)}</td>
@@ -115,10 +132,10 @@ export default function ManageRooms() {
                   </td>
                 </tr>
               ))}
-              {rooms.length === 0 && (
+              {filteredRooms.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-ink/50">
-                    No rooms for this hotel yet.
+                    {rooms.length === 0 ? 'No rooms for this hotel yet.' : 'No rooms match your search.'}
                   </td>
                 </tr>
               )}

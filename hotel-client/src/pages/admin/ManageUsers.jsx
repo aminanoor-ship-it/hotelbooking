@@ -4,6 +4,7 @@ import Modal from '../../components/ui/Modal'
 import Spinner from '../../components/ui/Spinner'
 import ErrorState from '../../components/ui/ErrorState'
 import RoleBadge from '../../components/ui/RoleBadge'
+import SearchInput from '../../components/ui/SearchInput'
 import IconAction from '../../components/Admin/IconAction'
 import UserForm from '../../components/Admin/UserForm'
 import { ViewIcon, EditIcon, DeleteIcon, RoleIcon } from '../../components/Admin/AdminIcons'
@@ -19,11 +20,14 @@ function formatDate(value) {
 export default function ManageUsers() {
   const { users, loading, error, refresh } = useUsers()
   const { user: currentUser } = useAuth()
+  const [query, setQuery] = useState('')
   const [viewUser, setViewUser] = useState(null)
   const [editUser, setEditUser] = useState(null)
   const [addOpen, setAddOpen] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [roleTarget, setRoleTarget] = useState(null)
+  const [changingRole, setChangingRole] = useState(false)
   const [actionError, setActionError] = useState('')
 
   async function handleSave(form) {
@@ -38,15 +42,20 @@ export default function ManageUsers() {
     refresh()
   }
 
-  async function handleChangeRole(target) {
+  async function confirmChangeRole() {
+    if (!roleTarget) return
+
+    const nextRole = roleTarget.role === 'Admin' ? 'User' : 'Admin'
     setActionError('')
-    const nextRole = target.role === 'Admin' ? 'User' : 'Admin'
-    if (!window.confirm(`Change ${target.fullName || target.email}'s role to ${nextRole}?`)) return
+    setChangingRole(true)
     try {
-      await api.put(`/users/${target.id}/role`, { role: nextRole })
+      await api.put(`/users/${roleTarget.id}/role`, { role: nextRole })
+      setRoleTarget(null)
       refresh()
     } catch (err) {
       setActionError(err.response?.data?.message || 'Could not change this user’s role.')
+    } finally {
+      setChangingRole(false)
     }
   }
 
@@ -66,6 +75,13 @@ export default function ManageUsers() {
     }
   }
 
+  const q = query.trim().toLowerCase()
+  const filteredUsers = q
+    ? users.filter((u) =>
+        [u.fullName, u.email, u.phoneNumber, u.role].some((v) => v?.toLowerCase().includes(q)),
+      )
+    : users
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -77,6 +93,15 @@ export default function ManageUsers() {
           Add User
         </Button>
       </div>
+
+      {!loading && !error && (
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Search by name, email, phone or role…"
+          className="max-w-md"
+        />
+      )}
 
       {loading && <Spinner label="Loading users…" />}
       {!loading && error && <ErrorState onRetry={refresh} />}
@@ -96,7 +121,7 @@ export default function ManageUsers() {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => {
+              {filteredUsers.map((u) => {
                 const isSelf = currentUser?.id === u.id
                 return (
                   <tr key={u.id} className="border-b border-ink/5 last:border-0">
@@ -121,7 +146,10 @@ export default function ManageUsers() {
                         <IconAction
                           label={isSelf ? 'You cannot change your own role' : 'Change role'}
                           tone="brand"
-                          onClick={() => handleChangeRole(u)}
+                          onClick={() => {
+                            setActionError('')
+                            setRoleTarget(u)
+                          }}
                           disabled={isSelf}
                         >
                           <RoleIcon />
@@ -142,10 +170,10 @@ export default function ManageUsers() {
                   </tr>
                 )
               })}
-              {users.length === 0 && (
+              {filteredUsers.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-ink/50">
-                    No users yet.
+                    {users.length === 0 ? 'No users yet.' : 'No users match your search.'}
                   </td>
                 </tr>
               )}
@@ -188,6 +216,39 @@ export default function ManageUsers() {
       <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Add user">
         {addOpen && (
           <UserForm mode="create" onSubmit={handleCreate} onCancel={() => setAddOpen(false)} />
+        )}
+      </Modal>
+
+      {/* Change role */}
+      <Modal
+        open={roleTarget !== null}
+        onClose={() => !changingRole && setRoleTarget(null)}
+        title="Change user role"
+      >
+        {roleTarget && (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-ink/65">
+              Change{' '}
+              <span className="font-semibold text-ink">{roleTarget.fullName || roleTarget.email}</span>{' '}
+              from{' '}
+              <RoleBadge role={roleTarget.role} /> to{' '}
+              <RoleBadge role={roleTarget.role === 'Admin' ? 'User' : 'Admin'} />?
+            </p>
+            <p className="text-sm text-ink/55">
+              {roleTarget.role === 'Admin'
+                ? 'They will lose access to the admin panel and management features.'
+                : 'They will gain full access to the admin panel, including managing hotels, rooms, bookings and users.'}
+            </p>
+            {actionError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{actionError}</p>}
+            <div className="flex justify-end gap-3">
+              <Button type="button" variant="secondary" onClick={() => setRoleTarget(null)} disabled={changingRole}>
+                Cancel
+              </Button>
+              <Button type="button" variant="primary" onClick={confirmChangeRole} disabled={changingRole}>
+                {changingRole ? 'Updating...' : 'Change role'}
+              </Button>
+            </div>
+          </div>
         )}
       </Modal>
 

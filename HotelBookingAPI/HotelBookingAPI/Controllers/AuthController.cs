@@ -67,7 +67,11 @@ namespace HotelBookingAPI.Controllers
 
             await _userManager.ResetAccessFailedCountAsync(user);
 
-            var token = await GenerateJwtTokenAsync(user);
+            // "Remember me" controls how long the session lives. Both the token and the
+            // cookie use the same lifetime so an un-remembered session can't be revived
+            // past its short window (e.g. via browser session restore).
+            var tokenLifetime = dto.RememberMe ? TimeSpan.FromDays(7) : TimeSpan.FromHours(8);
+            var token = await GenerateJwtTokenAsync(user, tokenLifetime);
 
             var cookieOptions = new CookieOptions
             {
@@ -76,8 +80,10 @@ namespace HotelBookingAPI.Controllers
                 SameSite = SameSiteMode.Lax
             };
 
+            // Persistent cookie only when "Remember me" is checked; otherwise a session
+            // cookie the browser drops when it closes.
             if (dto.RememberMe)
-                cookieOptions.Expires = DateTime.UtcNow.AddDays(7);
+                cookieOptions.Expires = DateTimeOffset.UtcNow.Add(tokenLifetime);
 
             Response.Cookies.Append("access_token", token, cookieOptions);
 
@@ -108,6 +114,11 @@ namespace HotelBookingAPI.Controllers
             if (!result.Succeeded)
                 return BadRequest(new { message = string.Join(", ", result.Errors.Select(e => e.Description)) });
 
+            // Clear any lockout / failed-attempt count so a user who reset precisely
+            // because they were locked out can log in immediately with the new password.
+            await _userManager.SetLockoutEndDateAsync(user, null);
+            await _userManager.ResetAccessFailedCountAsync(user);
+
             return Ok(new { message = "Password reset successfully. You can now log in." });
         }
 
@@ -131,7 +142,7 @@ namespace HotelBookingAPI.Controllers
             });
         }
 
-        private async Task<string> GenerateJwtTokenAsync(ApplicationUser user)
+        private async Task<string> GenerateJwtTokenAsync(ApplicationUser user, TimeSpan lifetime)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -150,7 +161,7 @@ namespace HotelBookingAPI.Controllers
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.Add(lifetime),
                 signingCredentials: creds
             );
 

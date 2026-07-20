@@ -74,7 +74,7 @@ export default function HotelCard({ hotel }) {
             Book Now
           </Button>
           <Button as={Link} to={`/hotels/${hotel.id}`} variant="secondary" className="flex-1 justify-center">
-            View Details
+            View Rooms
           </Button>
         </div>
       </div>

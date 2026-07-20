@@ -8,7 +8,7 @@ export default function FeaturesSection() {
       <div className="mx-auto flex max-w-6xl flex-col gap-14">
         <SectionHeading
           eyebrow="Why Choose Us"
-          title="What makes Horizon Stays different"
+          title="What makes Sahal Stay different"
           align="center"
           className="mx-auto items-center text-center"
         />

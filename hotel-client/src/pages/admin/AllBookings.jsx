@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import StatusBadge from '../../components/ui/StatusBadge'
+import SearchInput from '../../components/ui/SearchInput'
 import Spinner from '../../components/ui/Spinner'
 import ErrorState from '../../components/ui/ErrorState'
 import IconAction from '../../components/Admin/IconAction'
@@ -9,6 +10,7 @@ import api from '../../api/client'
 
 export default function AllBookings() {
   const { bookings, loading, error, refresh } = useAdminBookings()
+  const [query, setQuery] = useState('')
   const [actionError, setActionError] = useState('')
   const [actingId, setActingId] = useState(null)
 
@@ -38,9 +40,31 @@ export default function AllBookings() {
     }
   }
 
+  const q = query.trim().toLowerCase()
+  const filteredBookings = q
+    ? bookings.filter((booking) =>
+        [
+          booking.user?.fullName,
+          booking.user?.email,
+          booking.hotel?.name,
+          booking.room?.roomType,
+          booking.status,
+        ].some((v) => v?.toLowerCase().includes(q)),
+      )
+    : bookings
+
   return (
     <div className="flex flex-col gap-6">
       <h2 className="font-display text-xl text-ink">All Bookings</h2>
+
+      {!loading && !error && (
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Search by guest, hotel, room or status…"
+          className="max-w-md"
+        />
+      )}
 
       {loading && <Spinner label="Loading bookings…" />}
       {!loading && error && <ErrorState onRetry={refresh} />}
@@ -61,7 +85,7 @@ export default function AllBookings() {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
+              {filteredBookings.map((booking) => (
                 <tr key={booking.id} className="border-b border-ink/5 last:border-0">
                   <td className="px-6 py-4 text-ink">
                     <div className="flex flex-col">
@@ -105,10 +129,10 @@ export default function AllBookings() {
                   </td>
                 </tr>
               ))}
-              {bookings.length === 0 && (
+              {filteredBookings.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-ink/50">
-                    No bookings yet.
+                    {bookings.length === 0 ? 'No bookings yet.' : 'No bookings match your search.'}
                   </td>
                 </tr>
               )}
