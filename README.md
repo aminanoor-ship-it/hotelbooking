@@ -13,6 +13,10 @@
   <img src="https://img.shields.io/badge/License-MIT-success" alt="MIT">
 </p>
 
+<p align="center">
+  <img src="docs/images/sahal-stay-homepage.webp" alt="Sahal Stay hotel booking homepage" width="100%">
+</p>
+
 ## 📖 About
 
 Sahal Stay is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
