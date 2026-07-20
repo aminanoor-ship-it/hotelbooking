@@ -1,5 +1,9 @@
+// Collection of small inline SVG icon components used throughout the admin UI
+// (sidebar nav, table row actions, etc). Each accepts an optional className
+// override (defaults to a 5x5 size) and is purely presentational — no state/props logic.
 const base = 'h-5 w-5'
 
+// Dashboard/grid icon (four rectangles) — used for the admin dashboard nav link.
 export function DashboardIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -11,6 +15,7 @@ export function DashboardIcon({ className = base }) {
   )
 }
 
+// Building icon — used for the "Hotels" nav link/section.
 export function HotelIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -21,6 +26,7 @@ export function HotelIcon({ className = base }) {
   )
 }
 
+// Bed icon — used for the "Rooms" nav link/section.
 export function RoomIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -32,6 +38,7 @@ export function RoomIcon({ className = base }) {
   )
 }
 
+// Checklist/booking icon — used for the "Bookings" nav link/section.
 export function BookingIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -42,6 +49,7 @@ export function BookingIcon({ className = base }) {
   )
 }
 
+// People icon — used for the "Users" nav link/section.
 export function UsersIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -52,6 +60,7 @@ export function UsersIcon({ className = base }) {
   )
 }
 
+// Eye icon — used for "view" row actions in admin tables.
 export function ViewIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -61,6 +70,7 @@ export function ViewIcon({ className = base }) {
   )
 }
 
+// Pencil icon — used for "edit" row actions in admin tables.
 export function EditIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -70,6 +80,7 @@ export function EditIcon({ className = base }) {
   )
 }
 
+// Trash can icon — used for "delete" row actions in admin tables.
 export function DeleteIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -79,6 +90,7 @@ export function DeleteIcon({ className = base }) {
   )
 }
 
+// Shield/badge icon — used for "change role" actions on user rows.
 export function RoleIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -88,6 +100,7 @@ export function RoleIcon({ className = base }) {
   )
 }
 
+// Checkmark icon — used to confirm/approve actions (e.g. accept role change).
 export function CheckIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -96,6 +109,7 @@ export function CheckIcon({ className = base }) {
   )
 }
 
+// X icon — used to cancel/dismiss actions or close dialogs.
 export function CloseIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">

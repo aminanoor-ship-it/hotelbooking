@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import api from '../api/client'
 import { AuthContext } from './auth-context'
 
+// Wraps the app to provide auth state (current user, loading flag) and actions
+// (login/register/logout) via AuthContext, so any descendant can call useAuth().
 export function AuthProvider({ children }) {
   // `user` stores the signed-in account; `loading` prevents route checks before auth is known.
   const [user, setUser] = useState(null)

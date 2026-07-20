@@ -8,17 +8,20 @@ import api from '../api/client'
 
 const initialForm = { email: '', newPassword: '', confirmPassword: '' }
 
+// Password reset page: validates that the two password fields match, then posts to the reset endpoint (email-based, no token flow).
 export default function ResetPassword() {
   const navigate = useNavigate()
   const [form, setForm] = useState(initialForm)
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Generic controlled-input handler keyed by input `name`, shared across all text fields in the form.
   function handleChange(event) {
     const { name, value } = event.target
     setForm((f) => ({ ...f, [name]: value }))
   }
 
+  // Client-side confirmation check, then submits the reset request and redirects to Login with a success message on completion.
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')

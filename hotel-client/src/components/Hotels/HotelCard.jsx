@@ -4,6 +4,8 @@ import { resolveImageUrl } from '../../utils/imageUrl'
 
 const FALLBACK_IMAGE = 'https://picsum.photos/seed/horizon-hotel/500/650'
 
+// Card summarizing a single hotel for list/grid views. Prop: `hotel` (hotel object with rooms, images, etc.).
+// Renders a clickable image with an overlay of key info plus a description, capacity/room-count chips, and booking actions.
 export default function HotelCard({ hotel }) {
   // Normalize room data so the card can safely render even if the API omits rooms.
   const rooms = hotel.rooms || []

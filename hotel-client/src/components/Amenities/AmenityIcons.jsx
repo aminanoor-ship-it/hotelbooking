@@ -1,5 +1,9 @@
+// Collection of small inline SVG icon components representing hotel amenities
+// (used in AmenitiesSection). Each accepts an optional className override
+// (defaults to a 6x6 size) and is purely presentational.
 const base = 'h-6 w-6'
 
+// WiFi signal icon — represents "Free WiFi" amenity.
 export function WifiIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -11,6 +15,7 @@ export function WifiIcon({ className = base }) {
   )
 }
 
+// Swimming pool icon — represents "Swimming Pool" amenity.
 export function PoolIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -21,6 +26,7 @@ export function PoolIcon({ className = base }) {
   )
 }
 
+// Cutlery icon — represents "On-site Restaurant" amenity.
 export function RestaurantIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -30,6 +36,7 @@ export function RestaurantIcon({ className = base }) {
   )
 }
 
+// Shuttle van icon — represents "Airport Shuttle" amenity.
 export function ShuttleIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -42,6 +49,7 @@ export function ShuttleIcon({ className = base }) {
   )
 }
 
+// Leaf/petal icon — represents "Spa & Wellness" amenity.
 export function SpaIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -52,6 +60,7 @@ export function SpaIcon({ className = base }) {
   )
 }
 
+// Concierge bell icon — represents "24/7 Front Desk" amenity.
 export function ConciergeIcon({ className = base }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">

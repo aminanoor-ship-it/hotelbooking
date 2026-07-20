@@ -11,6 +11,7 @@ const tones = {
  */
 export default function IconAction({ label, tone = 'neutral', children, className = '', ...props }) {
   return (
+    // "group" wrapper lets the tooltip span react to hover state on the parent (group-hover)
     <span className="group relative inline-flex">
       <button
         type="button"
@@ -20,6 +21,7 @@ export default function IconAction({ label, tone = 'neutral', children, classNam
       >
         {children}
       </button>
+      {/* Tooltip is always in the DOM but invisible (opacity-0); fades in on button hover via group-hover */}
       <span
         role="tooltip"
         className="pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1 text-xs font-medium text-cream opacity-0 shadow-md transition-opacity duration-150 group-hover:opacity-100"

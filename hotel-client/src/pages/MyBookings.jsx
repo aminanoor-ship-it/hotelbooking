@@ -7,19 +7,17 @@ import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
 import ErrorState from '../components/ui/ErrorState'
 import { useMyBookings } from '../hooks/useMyBookings'
+import { matchesQuery } from '../utils/matchesQuery'
 
+// Page listing the current user's bookings with client-side text search across hotel name, room type and status.
 export default function MyBookings() {
   const { bookings, loading, error, refresh } = useMyBookings()
   const [query, setQuery] = useState('')
 
-  const q = query.trim().toLowerCase()
-  const filteredBookings = q
-    ? bookings.filter((booking) =>
-        [booking.hotel?.name, booking.room?.roomType, booking.status].some((v) =>
-          v?.toLowerCase().includes(q),
-        ),
-      )
-    : bookings
+  // Client-side filtering (no API call): matches the query against hotel name, room type, or booking status.
+  const filteredBookings = bookings.filter((booking) =>
+    matchesQuery([booking.hotel?.name, booking.room?.roomType, booking.status], query),
+  )
 
   return (
     <div className="min-h-screen bg-cream">
@@ -51,6 +49,7 @@ export default function MyBookings() {
               ) : (
                 <div className="flex flex-col gap-4">
                   {filteredBookings.map((booking) => (
+                    // onChanged triggers a re-fetch (e.g. after cancelling) so the list stays in sync with the server
                     <BookingCard key={booking.id} booking={booking} onChanged={refresh} />
                   ))}
                 </div>

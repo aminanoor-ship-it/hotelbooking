@@ -8,6 +8,7 @@ import { ArrowIcon } from '../components/ui/Icons'
 
 const initialForm = { fullName: '', email: '', password: '', phoneNumber: '' }
 
+// Registration page: collects account details, creates the account via context, then redirects to Login with a success flag.
 export default function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
@@ -15,11 +16,13 @@ export default function Register() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Generic controlled-input handler keyed by input `name`, shared across all text fields in the form.
   function handleChange(event) {
     const { name, value } = event.target
     setForm((f) => ({ ...f, [name]: value }))
   }
 
+  // Submits the registration form; on success navigates to Login and flags `justRegistered` so it can show a confirmation message.
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')
@@ -78,6 +81,7 @@ export default function Register() {
               value={form.phoneNumber}
               onChange={handleChange}
               placeholder="0612345678"
+              // Browser-native validation: enforces the local phone format (starts with 061, 10 digits total) before submit
               pattern="061[0-9]{7}"
               title="Must start with 061 and be exactly 10 digits"
               tone="glass"

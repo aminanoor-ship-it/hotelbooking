@@ -2,6 +2,7 @@ import SectionHeading from '../ui/SectionHeading'
 import FeatureCard from './FeatureCard'
 import { features } from '../../data/content'
 
+// Landing-page section listing the site's key features, sourced from static content data.
 export default function FeaturesSection() {
   return (
     <section className="px-6 py-24">
@@ -14,6 +15,7 @@ export default function FeaturesSection() {
         />
 
         <div className="grid gap-6 sm:grid-cols-3">
+          {/* Spread each feature object's fields directly as props onto FeatureCard. */}
           {features.map((feature) => (
             <FeatureCard key={feature.title} {...feature} />
           ))}

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Button from '../ui/Button'
 import { ArrowIcon } from '../ui/Icons'
 
+// Simple call-to-action banner encouraging users to browse hotels; renders a heading, copy, and a link-styled button.
 export default function CtaSection() {
   return (
     <section className="px-6 py-20">

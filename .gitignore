@@ -56,3 +56,4 @@ Thumbs.db
 
 # Editor swap files
 *.sw?
+".claude/" 

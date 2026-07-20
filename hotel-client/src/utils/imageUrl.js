@@ -9,8 +9,8 @@ const SERVER_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '')
  * - Empty values return the provided fallback (or empty string).
  */
 export function resolveImageUrl(path, fallback = '') {
-  if (!path) return fallback
-  if (/^https?:\/\//i.test(path)) return path
-  const normalized = path.startsWith('/') ? path : `/${path}`
-  return `${SERVER_ORIGIN}${normalized}`
+  if (!path) return fallback // no stored path: use caller-provided fallback (or empty string)
+  if (/^https?:\/\//i.test(path)) return path // already a full URL, leave untouched
+  const normalized = path.startsWith('/') ? path : `/${path}` // ensure a single leading slash
+  return `${SERVER_ORIGIN}${normalized}` // prefix relative upload path with the backend origin
 }

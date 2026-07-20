@@ -6,6 +6,7 @@ import TextField from '../components/ui/TextField'
 import Logo from '../components/ui/Logo'
 import { ArrowIcon } from '../components/ui/Icons'
 
+// Login page: authenticates the user via context, then redirects based on where they came from or their role.
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -14,11 +15,14 @@ export default function Login() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Generic controlled-input handler: reads `checked` for checkboxes, `value` for everything else, keyed by input `name`.
   function handleChange(event) {
     const { checked, name, type, value } = event.target
     setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
   }
 
+  // Submits credentials to the auth context, then routes the user: back to the page that redirected them here,
+  // to the admin dashboard for Admin accounts, or to the home page otherwise.
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')
@@ -57,11 +61,13 @@ export default function Login() {
 
           <h1 className="mb-4 text-center font-display text-3xl font-semibold text-white sm:text-4xl">Login</h1>
 
+          {/* Shown when redirected here from Register with { justRegistered: true } in router state */}
           {location.state?.justRegistered && (
             <p className="mb-4 rounded-sm bg-white/90 px-4 py-2 text-sm text-forest">
               Account created. You can log in now.
             </p>
           )}
+          {/* Generic informational message passed via router state (e.g. by a route guard redirecting here) */}
           {location.state?.message && (
             <p className="mb-4 rounded-sm bg-white/90 px-4 py-2 text-sm text-ink/70">{location.state.message}</p>
           )}

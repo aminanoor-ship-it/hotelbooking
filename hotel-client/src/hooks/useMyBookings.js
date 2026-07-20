@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import api from '../api/client'
 
+// Hook that fetches the current user's bookings and exposes loading/error state plus a manual refresh function.
 export function useMyBookings() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // Manually re-fetches the bookings list (e.g. after cancelling a booking); callers can await the returned promise.
   const refresh = useCallback(() => {
     setLoading(true)
     setError('')
@@ -16,6 +18,7 @@ export function useMyBookings() {
       .finally(() => setLoading(false))
   }, [])
 
+  // Fetches bookings once on mount. Uses a `cancelled` flag so state isn't set if the component unmounts before the request resolves.
   useEffect(() => {
     let cancelled = false
 

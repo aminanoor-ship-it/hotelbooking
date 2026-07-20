@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import Button from '../components/ui/Button'
 import { ArrowIcon } from '../components/ui/Icons'
 
+// Catch-all 404 page rendered for any route that doesn't match a defined path; offers links back to home/hotels.
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-cream">

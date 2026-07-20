@@ -67,4 +67,6 @@ export const roomTypes = [
   },
 ]
 
+// Same room type data keyed by `value` (the room type name) for O(1) lookup,
+// e.g. to get capacity constraints for a room type selected elsewhere in a form.
 export const roomTypeMap = Object.fromEntries(roomTypes.map((t) => [t.value, t]))

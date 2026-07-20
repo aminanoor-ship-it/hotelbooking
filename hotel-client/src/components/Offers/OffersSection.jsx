@@ -5,8 +5,10 @@ import ErrorState from '../ui/ErrorState'
 import HotelCard from '../Hotels/HotelCard'
 import { useHotels } from '../../hooks/useHotels'
 
+// Landing-page section highlighting the 3 cheapest hotels, fetched already sorted ascending by price.
 export default function OffersSection() {
   const { hotels, loading, error, refresh } = useHotels({ sortBy: 'priceAsc' })
+  // Top 3 cheapest results (hotels array is already price-ascending from the hook call above).
   const bestValue = hotels.slice(0, 3)
 
   return (
@@ -14,6 +16,7 @@ export default function OffersSection() {
       <div className="mx-auto flex max-w-6xl flex-col gap-10">
         <SectionHeading eyebrow="Special Offers" title="Our best-value stays right now" />
 
+        {/* Conditional rendering covers loading, error, empty, and populated states in sequence. */}
         {loading && <Spinner label="Finding the best deals…" />}
         {!loading && error && <ErrorState onRetry={refresh} />}
         {!loading && !error && bestValue.length === 0 && (

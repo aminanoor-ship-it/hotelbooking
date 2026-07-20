@@ -6,14 +6,20 @@ import SectionHeading from '../ui/SectionHeading'
 import { ArrowIcon } from '../ui/Icons'
 import { showcase } from '../../data/content'
 
+// Auto-advancing image carousel/slideshow built from static showcase content.
+// Renders slides with captions, prev/next arrow buttons, and dot indicators.
 export default function ProjectsShowcase() {
   const slides = showcase.slides
   const [current, setCurrent] = useState(0)
 
+  // Normalizes the index with modulo so it wraps around in both directions
+  // (e.g. going prev from slide 0 wraps to the last slide)
   const goTo = (index) => setCurrent((index + slides.length) % slides.length)
   const next = () => goTo(current + 1)
   const prev = () => goTo(current - 1)
 
+  // Auto-advances the slide every 5s; the interval is recreated only if the
+  // number of slides changes, and is always cleared on unmount/re-run to avoid leaks
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((c) => (c + 1) % slides.length)
@@ -35,6 +41,7 @@ export default function ProjectsShowcase() {
         </div>
 
         <div className="relative overflow-hidden rounded-[2rem]">
+          {/* Slides are laid out in a row; shifting by -100% per index creates the sliding animation */}
           <div
             className="flex transition-transform duration-500 ease-out"
             style={{ transform: `translateX(-${current * 100}%)` }}
@@ -65,6 +72,7 @@ export default function ProjectsShowcase() {
             <ArrowIcon />
           </IconButton>
 
+          {/* Dot indicators: one per slide, clicking jumps directly to that slide; active dot is wider */}
           <div className="absolute bottom-6 right-6 flex gap-2">
             {slides.map((slide, index) => (
               <button

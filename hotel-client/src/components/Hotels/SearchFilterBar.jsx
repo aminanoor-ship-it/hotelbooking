@@ -2,6 +2,8 @@
 const inputClass =
   'rounded-xl border border-ink/10 px-4 py-2.5 text-sm focus:border-forest focus:outline-none'
 
+// Controlled filter bar for the hotel listing page. Props: `filters` (current filter values object),
+// `onChange` (called with the full updated filters object whenever any field changes).
 export default function SearchFilterBar({ filters, onChange }) {
   // Updates only the changed filter field while preserving the other filter values.
   function handleChange(event) {

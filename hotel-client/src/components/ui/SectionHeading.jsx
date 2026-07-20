@@ -1,3 +1,6 @@
+// Section title with a small "eyebrow" label above it and a decorative dot/line.
+// `align` controls left vs center layout; `tone` switches the palette for use on
+// dark ("light" tone = light text/accents) vs light ("dark" tone) section backgrounds.
 export default function SectionHeading({
   eyebrow,
   title,
@@ -6,6 +9,7 @@ export default function SectionHeading({
   className = '',
 }) {
   const isCenter = align === 'center'
+  // Pick contrasting colors depending on the background the heading sits on.
   const eyebrowColor = tone === 'light' ? 'text-mint' : 'text-forest'
   const dotColor = tone === 'light' ? 'bg-mint' : 'bg-forest'
   const titleColor = tone === 'light' ? 'text-cream' : 'text-ink'
@@ -19,6 +23,7 @@ export default function SectionHeading({
       </span>
       <h2 className={`flex max-w-xl items-center gap-4 font-display text-3xl leading-[1.15] sm:text-4xl ${titleColor}`}>
         {title}
+        {/* Decorative rule filling remaining width; hidden on small screens to avoid crowding */}
         <span className={`hidden h-px flex-1 sm:inline-block ${lineColor}`} />
       </h2>
     </div>

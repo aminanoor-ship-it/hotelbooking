@@ -4,9 +4,11 @@ import HeroSearchBar from './Hero/HeroSearchBar'
 import { ArrowIcon, SparkleIcon } from './ui/Icons'
 import { heroImage } from '../data/content'
 
+// Top-of-page hero section: headline, copy, a CTA button, the search bar, and a hero image.
 export default function Hero() {
   return (
     <section id="home" className="relative overflow-hidden px-6 pb-20 pt-16">
+      {/* Decorative sparkle icons, hidden on smaller screens. */}
       <SparkleIcon className="absolute left-[8%] top-24 hidden h-8 w-8 text-forest/40 lg:block" />
       <SparkleIcon className="absolute bottom-10 right-[6%] hidden h-6 w-6 text-forest/30 lg:block" />
 

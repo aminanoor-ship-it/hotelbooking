@@ -10,6 +10,7 @@ import { resolveImageUrl } from '../utils/imageUrl'
 
 const FALLBACK_IMAGE = 'https://picsum.photos/seed/horizon-hotel-detail/900/420'
 
+// Page showing a single hotel's details plus its list of bookable rooms; hotel id comes from the route params.
 export default function HotelDetail() {
   const { id } = useParams()
   const { hotel, loading, error, refresh } = useHotel(id)
@@ -23,6 +24,7 @@ export default function HotelDetail() {
           {loading && <Spinner label="Loading hotel…" />}
           {!loading && error && <ErrorState onRetry={refresh} />}
 
+          {/* Main content: only rendered once loading finished without error and hotel data is present */}
           {!loading && !error && hotel && (
             <>
               <img
@@ -43,6 +45,7 @@ export default function HotelDetail() {
 
               <div className="flex flex-col gap-4">
                 <h2 className="font-display text-xl text-ink">Available rooms</h2>
+                {/* Guard against hotel.rooms being undefined; show empty state when there are no rooms */}
                 {(hotel.rooms || []).length === 0 && (
                   <EmptyState title="No rooms listed yet" description="Check back soon for available rooms." />
                 )}

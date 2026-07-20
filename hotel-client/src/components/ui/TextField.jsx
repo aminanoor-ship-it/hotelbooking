@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import { EyeIcon, EyeOffIcon } from './Icons'
 
+// Labeled text input with built-in error display and a show/hide toggle for
+// password fields. `tone="glass"` restyles it for use over dark/photo backgrounds
+// (e.g. hero sections); any other props are spread onto the underlying <input>.
 export default function TextField({ label, name, type = 'text', error, className = '', tone = 'default', ...props }) {
+  // Tracks whether a password field currently reveals plain text.
   const [visible, setVisible] = useState(false)
   const isPassword = type === 'password'
+  // Swap the actual input type to 'text' only while the user has toggled visibility on.
   const inputType = isPassword && visible ? 'text' : type
   const isGlass = tone === 'glass'
+  // Style variants keyed off `tone`, used for the frosted-glass look on dark backgrounds.
   const labelClass = isGlass ? 'text-white/90' : 'text-ink/70'
   const inputClass = isGlass
     ? 'border-white/20 bg-white/95 text-ink placeholder:text-ink/35 focus:border-white'
@@ -25,6 +31,7 @@ export default function TextField({ label, name, type = 'text', error, className
           } ${error ? 'border-red-400' : inputClass}`}
           {...props}
         />
+        {/* Eye toggle only rendered for password fields; tabIndex={-1} keeps it out of tab order */}
         {isPassword && (
           <button
             type="button"

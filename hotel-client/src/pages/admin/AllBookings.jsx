@@ -6,14 +6,18 @@ import ErrorState from '../../components/ui/ErrorState'
 import IconAction from '../../components/Admin/IconAction'
 import { CheckIcon, CloseIcon } from '../../components/Admin/AdminIcons'
 import { useAdminBookings } from '../../hooks/useAdminBookings'
+import { matchesQuery } from '../../utils/matchesQuery'
 import api from '../../api/client'
 
+// Admin page listing every booking across all users, with search and per-row confirm/reject actions for pending bookings.
 export default function AllBookings() {
   const { bookings, loading, error, refresh } = useAdminBookings()
   const [query, setQuery] = useState('')
   const [actionError, setActionError] = useState('')
+  // Tracks which booking row currently has a confirm/reject request in flight, so only that row's buttons disable.
   const [actingId, setActingId] = useState(null)
 
+  // Confirms a pending booking, then re-fetches the list so the row's status updates.
   async function handleConfirm(booking) {
     setActionError('')
     setActingId(booking.id)
@@ -27,6 +31,7 @@ export default function AllBookings() {
     }
   }
 
+  // Rejects a pending booking, then re-fetches the list so the row's status updates.
   async function handleReject(booking) {
     setActionError('')
     setActingId(booking.id)
@@ -40,18 +45,19 @@ export default function AllBookings() {
     }
   }
 
-  const q = query.trim().toLowerCase()
-  const filteredBookings = q
-    ? bookings.filter((booking) =>
-        [
-          booking.user?.fullName,
-          booking.user?.email,
-          booking.hotel?.name,
-          booking.room?.roomType,
-          booking.status,
-        ].some((v) => v?.toLowerCase().includes(q)),
-      )
-    : bookings
+  // Client-side filtering across guest name/email, hotel, room type, and status.
+  const filteredBookings = bookings.filter((booking) =>
+    matchesQuery(
+      [
+        booking.user?.fullName,
+        booking.user?.email,
+        booking.hotel?.name,
+        booking.room?.roomType,
+        booking.status,
+      ],
+      query,
+    ),
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -104,6 +110,7 @@ export default function AllBookings() {
                     <StatusBadge status={booking.status} />
                   </td>
                   <td className="px-6 py-4">
+                    {/* Confirm/Reject actions only make sense while a booking is still Pending */}
                     {booking.status === 'Pending' ? (
                       <div className="flex justify-end gap-1">
                         <IconAction
@@ -132,6 +139,7 @@ export default function AllBookings() {
               {filteredBookings.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-ink/50">
+                    {/* Distinguish "genuinely empty" from "search filtered everything out" */}
                     {bookings.length === 0 ? 'No bookings yet.' : 'No bookings match your search.'}
                   </td>
                 </tr>

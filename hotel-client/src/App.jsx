@@ -19,10 +19,14 @@ import AllBookings from './pages/admin/AllBookings'
 import ManageUsers from './pages/admin/ManageUsers'
 import NotFound from './pages/NotFound'
 
+// Root component: sets up global auth context and all client-side routes.
+// Wraps everything in AuthProvider so any page/component can access the logged-in user,
+// and BrowserRouter to enable path-based navigation.
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Resets scroll position to top on every route change */}
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -34,6 +38,7 @@ function App() {
           <Route
             path="/book/:roomId"
             element={
+              // Booking a room requires being logged in; redirects with a message otherwise
               <RequireAuth message="Please login to book">
                 <BookRoom />
               </RequireAuth>
@@ -51,6 +56,7 @@ function App() {
           <Route
             path="/admin"
             element={
+              // Entire admin section is gated behind admin-role check; AdminLayout renders nested routes via <Outlet />
               <RequireAdmin>
                 <AdminLayout />
               </RequireAdmin>
@@ -63,6 +69,7 @@ function App() {
             <Route path="users" element={<ManageUsers />} />
           </Route>
 
+          {/* Catch-all for unmatched routes */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

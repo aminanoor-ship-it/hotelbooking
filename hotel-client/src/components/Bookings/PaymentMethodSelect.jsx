@@ -1,3 +1,4 @@
+// Static list of selectable payment methods rendered as option cards below.
 const methods = [
   {
     value: 'EVC',
@@ -11,6 +12,7 @@ const methods = [
   },
 ]
 
+// Renders the EVC Plus (mobile money) icon as inline SVG.
 function EvcIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -21,6 +23,7 @@ function EvcIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Renders the VISA card icon as inline SVG.
 function VisaIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -31,8 +34,11 @@ function VisaIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Maps a method's value to its corresponding icon component for lookup below.
 const icons = { EVC: EvcIcon, VISA: VisaIcon }
 
+// Controlled selectable-card group for choosing a payment method.
+// Props: `value` (currently selected method value), `onChange` (called with the new value on selection).
 export default function PaymentMethodSelect({ value, onChange }) {
   return (
     <fieldset className="flex flex-col gap-2">
@@ -40,6 +46,7 @@ export default function PaymentMethodSelect({ value, onChange }) {
       <div className="grid grid-cols-2 gap-3">
         {methods.map((method) => {
           const Icon = icons[method.value]
+          // Highlights the card that matches the currently selected value.
           const selected = value === method.value
           return (
             <button

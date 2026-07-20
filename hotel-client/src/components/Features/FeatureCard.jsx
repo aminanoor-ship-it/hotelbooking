@@ -1,6 +1,9 @@
 import { featureIcons } from '../ui/featureIcons'
 
+// Displays a single feature/benefit tile with an icon, title, and description.
+// Props: `icon` (key into featureIcons map), `title`, `description`, `elevated` (raises/highlights the card with a shadow when true).
 export default function FeatureCard({ icon, title, description, elevated = false }) {
+  // Resolve the icon component from the named key so callers can pass a string identifier.
   const Icon = featureIcons[icon]
 
   return (

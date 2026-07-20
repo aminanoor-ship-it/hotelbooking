@@ -4,17 +4,24 @@ import Modal from '../ui/Modal'
 import StatusBadge from '../ui/StatusBadge'
 import api from '../../api/client'
 
+// Formats an ISO date string into a short human-readable date.
 function formatDate(value) {
   return new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
+// Card summarizing a single booking on the "My Bookings" page, with a modal
+// showing full details. Props: booking (the booking object), onChanged (optional
+// callback fired after a successful cancel, so the parent can refresh its list).
 export default function BookingCard({ booking, onChanged }) {
   const [cancelling, setCancelling] = useState(false)
   const [error, setError] = useState('')
   const [showDetails, setShowDetails] = useState(false)
 
+  // Cancel action is only available while the booking hasn't already been cancelled/completed
   const canCancel = booking.status === 'Pending' || booking.status === 'Confirmed'
 
+  // Cancels the booking via the API, closes the details modal on success, and
+  // notifies the parent (via onChanged) so it can refetch/update the booking list.
   async function handleCancel() {
     setCancelling(true)
     setError('')
@@ -49,6 +56,7 @@ export default function BookingCard({ booking, onChanged }) {
             <Button variant="secondary" onClick={() => setShowDetails(true)}>
               View
             </Button>
+            {/* Cancel button only shown for bookings that are still cancellable */}
             {canCancel && (
               <Button variant="secondary" onClick={handleCancel} disabled={cancelling}>
                 {cancelling ? 'Cancelling…' : 'Cancel'}
@@ -61,6 +69,7 @@ export default function BookingCard({ booking, onChanged }) {
 
       <Modal open={showDetails} onClose={() => setShowDetails(false)} title="Booking details">
         <div className="flex flex-col gap-3 text-sm">
+          {/* Render each detail row from a label/value tuple array to keep markup compact */}
           {[
             ['Booking ID', `#${booking.id}`],
             ['Hotel', booking.hotel?.name || '—'],

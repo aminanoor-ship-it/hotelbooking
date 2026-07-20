@@ -1,3 +1,4 @@
+// Renders a single numbered step row (step number, title, description) used inside ProcessSection.
 export default function ProcessStep({ number, title, description }) {
   return (
     <div className="flex flex-col gap-3 border-t border-ink/10 py-6 sm:flex-row sm:items-start sm:gap-8">

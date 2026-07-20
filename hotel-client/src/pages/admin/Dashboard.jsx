@@ -7,11 +7,14 @@ import { useStats } from '../../hooks/useStats'
 import { useAdminBookings } from '../../hooks/useAdminBookings'
 import DashboardCharts from '../../components/Admin/DashboardCharts'
 
+// Admin dashboard: shows summary stat cards, charts, and a recent-bookings list, combining two independent data sources.
 export default function Dashboard() {
   const { stats, loading: statsLoading, error: statsError, refresh: refreshStats } = useStats()
   const { bookings, loading: bookingsLoading } = useAdminBookings()
 
+  // Combined loading state: page-level spinner waits for both the stats and bookings requests to finish.
   const loading = statsLoading || bookingsLoading
+  // Pending count is derived from the bookings list rather than the stats endpoint, since stats doesn't break it out.
   const pendingCount = bookings.filter((booking) => booking.status === 'Pending').length
 
   return (
@@ -24,6 +27,7 @@ export default function Dashboard() {
       {loading && <Spinner label="Loading stats…" />}
       {!loading && statsError && <ErrorState onRetry={refreshStats} />}
 
+      {/* Stat cards, charts, and recent bookings all wait for stats to load successfully before rendering */}
       {!loading && !statsError && stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           <StatCard label="Total Hotels" value={stats.totalHotels} icon={<HotelIcon className="h-5 w-5" />} />

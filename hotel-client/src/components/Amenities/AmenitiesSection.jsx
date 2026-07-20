@@ -17,6 +17,8 @@ const amenities = [
   { Icon: ConciergeIcon, label: '24/7 Front Desk' },
 ]
 
+// Landing page section listing hotel amenities as icon + label cards.
+// No props, no state — purely presentational, driven by the local `amenities` array.
 export default function AmenitiesSection() {
   return (
     <section className="px-6 py-24">
@@ -29,6 +31,7 @@ export default function AmenitiesSection() {
         />
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {/* Render one card per amenity, dynamically using its Icon component */}
           {amenities.map(({ Icon, label }) => (
             <div
               key={label}

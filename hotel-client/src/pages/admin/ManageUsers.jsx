@@ -10,13 +10,16 @@ import UserForm from '../../components/Admin/UserForm'
 import { ViewIcon, EditIcon, DeleteIcon, RoleIcon } from '../../components/Admin/AdminIcons'
 import { useUsers } from '../../hooks/useUsers'
 import { useAuth } from '../../context/useAuth'
+import { matchesQuery } from '../../utils/matchesQuery'
 import api from '../../api/client'
 
+// Formats an ISO date string as e.g. "Jan 5, 2026"; returns an em dash placeholder when no value is present.
 function formatDate(value) {
   if (!value) return '—'
   return new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
+// Admin page for listing all users with search, viewing details, editing, changing role, creating and deleting accounts.
 export default function ManageUsers() {
   const { users, loading, error, refresh } = useUsers()
   const { user: currentUser } = useAuth()
@@ -30,18 +33,21 @@ export default function ManageUsers() {
   const [changingRole, setChangingRole] = useState(false)
   const [actionError, setActionError] = useState('')
 
+  // Saves edits to the currently selected user, then refreshes the list.
   async function handleSave(form) {
     await api.put(`/users/${editUser.id}`, form)
     setEditUser(null)
     refresh()
   }
 
+  // Creates a new user account from the "Add user" form, then refreshes the list.
   async function handleCreate(form) {
     await api.post('/users', form)
     setAddOpen(false)
     refresh()
   }
 
+  // Toggles the role of the user staged in `roleTarget` between Admin and User, then refreshes the list.
   async function confirmChangeRole() {
     if (!roleTarget) return
 
@@ -59,6 +65,7 @@ export default function ManageUsers() {
     }
   }
 
+  // Deletes the user staged in `deleteTarget`, then refreshes the list.
   async function handleDelete() {
     if (!deleteTarget) return
 
@@ -75,12 +82,10 @@ export default function ManageUsers() {
     }
   }
 
-  const q = query.trim().toLowerCase()
-  const filteredUsers = q
-    ? users.filter((u) =>
-        [u.fullName, u.email, u.phoneNumber, u.role].some((v) => v?.toLowerCase().includes(q)),
-      )
-    : users
+  // Client-side filtering across name, email, phone, and role.
+  const filteredUsers = users.filter((u) =>
+    matchesQuery([u.fullName, u.email, u.phoneNumber, u.role], query),
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -122,6 +127,8 @@ export default function ManageUsers() {
             </thead>
             <tbody>
               {filteredUsers.map((u) => {
+                // Route guard for row actions: an admin cannot change their own role or delete their own account
+                // (prevents accidental self-lockout), so those actions are disabled for the logged-in user's own row.
                 const isSelf = currentUser?.id === u.id
                 return (
                   <tr key={u.id} className="border-b border-ink/5 last:border-0">
@@ -186,6 +193,7 @@ export default function ManageUsers() {
       <Modal open={viewUser !== null} onClose={() => setViewUser(null)} title="User details">
         {viewUser && (
           <dl className="flex flex-col gap-3 text-sm">
+            {/* Rendered as an array of [label, value] pairs so the row markup only needs to be written once */}
             {[
               ['Name', viewUser.fullName || '—'],
               ['Email', viewUser.email],
@@ -219,7 +227,7 @@ export default function ManageUsers() {
         )}
       </Modal>
 
-      {/* Change role */}
+      {/* Change role; onClose is disabled while the role change request is in flight */}
       <Modal
         open={roleTarget !== null}
         onClose={() => !changingRole && setRoleTarget(null)}
@@ -252,6 +260,7 @@ export default function ManageUsers() {
         )}
       </Modal>
 
+      {/* Delete confirmation; onClose is disabled while the delete request is in flight */}
       <Modal
         open={deleteTarget !== null}
         onClose={() => !deleting && setDeleteTarget(null)}

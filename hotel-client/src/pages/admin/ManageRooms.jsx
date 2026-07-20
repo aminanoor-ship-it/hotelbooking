@@ -8,8 +8,10 @@ import SearchInput from '../../components/ui/SearchInput'
 import IconAction from '../../components/Admin/IconAction'
 import { EditIcon, DeleteIcon } from '../../components/Admin/AdminIcons'
 import { useHotels } from '../../hooks/useHotels'
+import { matchesQuery } from '../../utils/matchesQuery'
 import api from '../../api/client'
 
+// Admin page for managing rooms scoped to a single selected hotel: pick a hotel, then list/add/edit/delete its rooms.
 export default function ManageRooms() {
   const { hotels, loading, error, refresh } = useHotels()
   const [selectedHotelId, setSelectedHotelId] = useState('')
@@ -19,15 +21,15 @@ export default function ManageRooms() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
+  // String comparison handles the <select> value (always a string) matching hotel.id (likely a number).
   const selectedHotel = hotels.find((hotel) => String(hotel.id) === String(selectedHotelId))
   const rooms = selectedHotel?.rooms || []
-  const q = query.trim().toLowerCase()
-  const filteredRooms = q
-    ? rooms.filter((room) =>
-        [room.roomType, room.description, String(room.capacity)].some((v) => v?.toLowerCase().includes(q)),
-      )
-    : rooms
+  // Client-side filtering across room type, description, and capacity (scoped to the selected hotel's rooms).
+  const filteredRooms = rooms.filter((room) =>
+    matchesQuery([room.roomType, room.description, String(room.capacity)], query),
+  )
 
+  // Shared save handler for both create and edit modals; always tags the payload with the currently selected hotel.
   async function handleSave(form) {
     const payload = { ...form, hotelId: Number(selectedHotelId) }
     if (modalState === 'add') {
@@ -39,6 +41,7 @@ export default function ManageRooms() {
     refresh()
   }
 
+  // Deletes the room currently staged in `deleteTarget` and refreshes the hotel/room list.
   async function handleDelete() {
     if (!deleteTarget) return
 
@@ -73,6 +76,7 @@ export default function ManageRooms() {
               </option>
             ))}
           </select>
+          {/* Disabled until a hotel is selected, since a new room must belong to a hotel */}
           <Button variant="primary" onClick={() => setModalState('add')} disabled={!selectedHotelId}>
             Add Room
           </Button>
@@ -83,6 +87,7 @@ export default function ManageRooms() {
       {!loading && error && <ErrorState onRetry={refresh} />}
       {deleteError && <p className="text-sm text-red-600">{deleteError}</p>}
 
+      {/* Prompt shown until the admin picks a hotel; the rooms table only renders once one is selected */}
       {!loading && !error && !selectedHotelId && (
         <p className="text-sm text-ink/50">Select a hotel to manage its rooms.</p>
       )}
@@ -144,6 +149,7 @@ export default function ManageRooms() {
         </div>
       )}
 
+      {/* Add/Edit modal: shared between both flows, distinguished by whether modalState is 'add' or a room object */}
       <Modal
         open={modalState !== null}
         onClose={() => setModalState(null)}
@@ -156,6 +162,7 @@ export default function ManageRooms() {
         />
       </Modal>
 
+      {/* Delete confirmation modal; onClose is disabled while a delete request is in flight to avoid closing mid-request */}
       <Modal
         open={deleteTarget !== null}
         onClose={() => !deleting && setDeleteTarget(null)}

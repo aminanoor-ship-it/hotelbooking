@@ -5,6 +5,8 @@ import { roomTypes, roomTypeMap } from '../../data/roomTypes'
 
 const emptyForm = { roomType: '', description: '', pricePerNight: '', capacity: '' }
 
+// Validates the room form: room type required, price must be positive, and capacity
+// must fall within the min/max range defined for the selected known room type.
 function validate(form) {
   const errors = {}
   if (!form.roomType) errors.roomType = 'Please select a room type.'
@@ -26,6 +28,8 @@ function validate(form) {
 const inputClass =
   'rounded-xl border border-ink/10 px-4 py-2.5 text-sm focus:border-forest focus:outline-none'
 
+// Create/edit form for a hotel room. Props: initialValues (prefill for edit mode),
+// onSubmit (async callback with the parsed room payload), onCancel (dismiss handler).
 export default function RoomForm({ initialValues, onSubmit, onCancel }) {
   const [form, setForm] = useState({ ...emptyForm, ...initialValues })
   // Existing rooms already have a description the admin chose — don't overwrite it.
@@ -40,6 +44,9 @@ export default function RoomForm({ initialValues, onSubmit, onCancel }) {
 
   const selectedType = roomTypeMap[form.roomType]
 
+  // Handles the room-type <select> changing: auto-fills capacity from the type's
+  // default, and auto-fills description too, but only if the admin hasn't manually
+  // edited the description yet (so their edits are never clobbered).
   function handleTypeChange(event) {
     const value = event.target.value
     const type = roomTypeMap[value]
@@ -52,6 +59,8 @@ export default function RoomForm({ initialValues, onSubmit, onCancel }) {
     setFieldErrors((f) => ({ ...f, roomType: undefined, capacity: undefined }))
   }
 
+  // Generic field change handler; marks description as manually touched so it won't
+  // be auto-overwritten again by handleTypeChange.
   function handleChange(event) {
     const { name, value } = event.target
     if (name === 'description') setDescriptionTouched(true)
@@ -59,6 +68,8 @@ export default function RoomForm({ initialValues, onSubmit, onCancel }) {
     setFieldErrors((f) => ({ ...f, [name]: undefined }))
   }
 
+  // Validates the form, then submits a normalized payload (numeric price/capacity)
+  // to the parent. Surfaces server error messages on failure.
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')

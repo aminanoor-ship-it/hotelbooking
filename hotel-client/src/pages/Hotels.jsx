@@ -11,8 +11,10 @@ import ErrorState from '../components/ui/ErrorState'
 import { useHotels } from '../hooks/useHotels'
 import { useDebouncedValue } from '../hooks/useDebouncedValue'
 
+// Page listing hotels with search/filter/sort controls; initializes filters from URL query params so links are shareable.
 export default function Hotels() {
   const [searchParams] = useSearchParams()
+  // Lazy initializer reads filter values from the URL once on mount, so a shared/bookmarked link pre-fills the search.
   const [filters, setFilters] = useState(() => ({
     search: searchParams.get('search') || '',
     minPrice: searchParams.get('minPrice') || '',
@@ -21,8 +23,10 @@ export default function Hotels() {
     sortBy: searchParams.get('sortBy') || '',
   }))
 
+  // Debounce filter changes before hitting the API, avoiding a request on every keystroke.
   const debouncedFilters = useDebouncedValue(filters, 400)
 
+  // Client-side validation: min price must not exceed max price; checked against the debounced values shown to the API.
   const validationError =
     debouncedFilters.minPrice &&
     debouncedFilters.maxPrice &&
@@ -30,6 +34,7 @@ export default function Hotels() {
       ? 'Minimum price cannot be greater than maximum price.'
       : ''
 
+  // Convert empty-string filter values to `undefined` so they're omitted from the query string instead of sent as blanks.
   const apiParams = {
     search: debouncedFilters.search || undefined,
     minPrice: debouncedFilters.minPrice || undefined,
@@ -51,6 +56,7 @@ export default function Hotels() {
 
           {validationError && <p className="text-sm text-red-600">{validationError}</p>}
 
+          {/* Each branch below is gated on !validationError so results/loading/error states never show alongside an invalid filter */}
           {!validationError && loading && <Spinner label="Loading hotels…" />}
           {!validationError && !loading && error && <ErrorState onRetry={refresh} />}
           {!validationError && !loading && !error && hotels.length === 0 && (

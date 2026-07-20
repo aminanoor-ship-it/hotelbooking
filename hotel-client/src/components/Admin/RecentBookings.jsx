@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom'
 import StatusBadge from '../ui/StatusBadge'
 
+// Formats an ISO date string into a short human-readable date, or an em-dash if missing.
 function formatDate(value) {
   if (!value) return '—'
   return new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
+// Admin dashboard widget listing the most recent bookings in a table.
+// Props: bookings (full list of bookings — this component sorts/slices it locally).
 export default function RecentBookings({ bookings }) {
+  // Copy the array before sorting (avoid mutating the prop) then take the 6 newest by createdAt
   const recent = [...bookings]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 6)
@@ -43,6 +47,7 @@ export default function RecentBookings({ bookings }) {
                 <td className="px-6 py-4 text-right text-ink/60">${booking.totalPrice.toFixed(2)}</td>
               </tr>
             ))}
+            {/* Empty-state row shown when there are no bookings at all */}
             {recent.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-ink/50">

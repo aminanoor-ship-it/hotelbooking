@@ -2,6 +2,8 @@ import { NavLink, Outlet } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import { DashboardIcon, HotelIcon, RoomIcon, BookingIcon, UsersIcon } from '../../components/Admin/AdminIcons'
 
+// Admin nav items shared between the desktop sidebar and mobile top nav below.
+// `end: true` on Dashboard prevents its NavLink from matching every /admin/* sub-route.
 const links = [
   { label: 'Dashboard', to: '/admin', end: true, Icon: DashboardIcon },
   { label: 'Manage Hotels', to: '/admin/hotels', Icon: HotelIcon },
@@ -10,6 +12,8 @@ const links = [
   { label: 'Manage Users', to: '/admin/users', Icon: UsersIcon },
 ]
 
+// Shared layout for all /admin/* routes: renders the nav (sidebar on desktop, top nav on mobile) and the active
+// child route via <Outlet />.
 export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-cream-2">
@@ -25,6 +29,7 @@ export default function AdminLayout() {
                 key={to}
                 to={to}
                 end={end}
+                // NavLink's render-prop form: className/children both receive `isActive` to style the current route differently
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
                     isActive

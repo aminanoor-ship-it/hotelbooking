@@ -8,8 +8,10 @@ import SearchInput from '../../components/ui/SearchInput'
 import IconAction from '../../components/Admin/IconAction'
 import { EditIcon, DeleteIcon } from '../../components/Admin/AdminIcons'
 import { useHotels } from '../../hooks/useHotels'
+import { matchesQuery } from '../../utils/matchesQuery'
 import api from '../../api/client'
 
+// Admin page for listing, creating, editing and deleting hotels, with client-side search.
 export default function ManageHotels() {
   const { hotels, loading, error, refresh } = useHotels()
   const [query, setQuery] = useState('')
@@ -18,6 +20,8 @@ export default function ManageHotels() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
+  // Shared save handler for both create and edit modals: branches on whether modalState is the 'add' sentinel
+  // or an actual hotel object (edit), then re-fetches and closes the modal.
   async function handleSave(form) {
     if (modalState === 'add') {
       await api.post('/hotels', form)
@@ -28,6 +32,7 @@ export default function ManageHotels() {
     refresh()
   }
 
+  // Deletes the hotel currently staged in `deleteTarget` (set via the row's Delete action) and refreshes the list.
   async function handleDelete() {
     if (!deleteTarget) return
 
@@ -44,12 +49,10 @@ export default function ManageHotels() {
     }
   }
 
-  const q = query.trim().toLowerCase()
-  const filteredHotels = q
-    ? hotels.filter((hotel) =>
-        [hotel.name, hotel.location, hotel.description].some((v) => v?.toLowerCase().includes(q)),
-      )
-    : hotels
+  // Client-side filtering across name, location, and description.
+  const filteredHotels = hotels.filter((hotel) =>
+    matchesQuery([hotel.name, hotel.location, hotel.description], query),
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -121,6 +124,7 @@ export default function ManageHotels() {
         </div>
       )}
 
+      {/* Add/Edit modal: shared between both flows, distinguished by whether modalState is 'add' or a hotel object */}
       <Modal
         open={modalState !== null}
         onClose={() => setModalState(null)}
@@ -133,6 +137,7 @@ export default function ManageHotels() {
         />
       </Modal>
 
+      {/* Delete confirmation modal; onClose is disabled while a delete request is in flight to avoid closing mid-request */}
       <Modal
         open={deleteTarget !== null}
         onClose={() => !deleting && setDeleteTarget(null)}

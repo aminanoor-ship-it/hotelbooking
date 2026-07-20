@@ -1,5 +1,6 @@
 import { partners } from '../data/content'
 
+// Simple horizontal strip of partner/brand names, sourced from static content data.
 export default function PartnerStrip() {
   return (
     <section className="border-y border-ink/5 bg-cream-2 px-6 py-10">

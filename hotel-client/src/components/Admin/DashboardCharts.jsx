@@ -15,14 +15,18 @@ const metricColors = {
   Pending: '#1d3a30',
 }
 
+// Formats a raw number using locale-aware thousands separators (e.g. 1,234).
 function formatCount(value) {
   return new Intl.NumberFormat().format(value)
 }
 
+// Buckets bookings by status into chart-ready { label, value } items,
+// dropping any status with a zero count so the donut chart doesn't render empty slices.
 function getStatusItems(bookings) {
   const pendingCount = bookings.filter((booking) => booking.status === 'Pending').length
   const confirmedCount = bookings.filter((booking) => booking.status === 'Confirmed').length
   const cancelledCount = bookings.filter((booking) => booking.status === 'Cancelled').length
+  // Catch-all for any status value not explicitly tracked above
   const otherCount = bookings.length - pendingCount - confirmedCount - cancelledCount
 
   return [
@@ -33,6 +37,8 @@ function getStatusItems(bookings) {
   ].filter((item) => item.value > 0)
 }
 
+// Converts a polar coordinate (angle around a center point) to an SVG x/y cartesian point.
+// Angle is offset by -90deg so 0 degrees points up (12 o'clock) instead of right.
 function polarToCartesian(center, radius, angleInDegrees) {
   const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180
 
@@ -42,6 +48,9 @@ function polarToCartesian(center, radius, angleInDegrees) {
   }
 }
 
+// Builds an SVG arc "d" path string between two angles on a circle, used to draw
+// each colored segment of the donut chart. largeArcFlag picks the correct arc
+// direction when a slice spans more than half the circle.
 function describeArc(center, radius, startAngle, endAngle) {
   const start = polarToCartesian(center, radius, endAngle)
   const end = polarToCartesian(center, radius, startAngle)
@@ -50,6 +59,8 @@ function describeArc(center, radius, startAngle, endAngle) {
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`
 }
 
+// Renders a hand-built SVG bar chart (no charting library) for admin totals
+// (hotels/rooms/bookings/customers/pending). items: [{ label, value }].
 function BarChart({ items }) {
   const chart = {
     width: 520,
@@ -61,8 +72,10 @@ function BarChart({ items }) {
   }
   const plotHeight = chart.height - chart.top - chart.bottom
   const plotWidth = chart.width - chart.left - chart.right
+  // Y-axis max rounded up to the nearest multiple of 5 so gridlines land on round numbers
   const maxValue = Math.max(1, ...items.map((item) => item.value))
   const roundedMax = Math.max(5, Math.ceil(maxValue / 5) * 5)
+  // 4 evenly-spaced gridline values from 0 to roundedMax
   const ticks = Array.from({ length: 4 }, (_, index) => Math.round((roundedMax / 3) * index))
   const slotWidth = plotWidth / items.length
   const barWidth = Math.min(38, slotWidth * 0.42)
@@ -120,11 +133,14 @@ function BarChart({ items }) {
   )
 }
 
+// Renders a hand-built SVG donut chart showing the proportion of bookings per status.
+// items: [{ label, value }], total: sum of all item values (used for percentages).
 function DonutChart({ items, total }) {
   const size = 160
   const center = size / 2
   const radius = 54
   const strokeWidth = 26
+  // Walk through items accumulating a running angle so each slice starts where the previous ended
   const slices = items.reduce(
     (acc, item) => {
       const startAngle = acc.currentAngle
@@ -176,7 +192,12 @@ function DonutChart({ items, total }) {
   )
 }
 
+// Admin dashboard visualization panel: shows a bar chart of overall totals
+// (hotels/rooms/bookings/customers/pending) and a donut chart of booking status split.
+// Props: stats (aggregate counts object), bookings (full booking list used to derive status counts).
 export default function DashboardCharts({ stats, bookings }) {
+  // Memoized so the bar-chart data array is only rebuilt when the underlying stats/bookings change,
+  // avoiding unnecessary re-renders of the SVG bar chart.
   const metricBars = useMemo(
     () => [
       { label: 'Hotels', value: stats.totalHotels },
@@ -229,6 +250,7 @@ export default function DashboardCharts({ stats, bookings }) {
           </span>
         </div>
 
+        {/* Only render the donut chart and breakdown when there's at least one booking to chart */}
         {bookings.length > 0 ? (
           <>
             <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">

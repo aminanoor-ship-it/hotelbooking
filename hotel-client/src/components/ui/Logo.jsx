@@ -14,6 +14,7 @@ export default function Logo({ showText = true, textClassName = 'text-ink', clas
           />
         </svg>
       </span>
+      {/* Wordmark is optional so the logo can be used as an icon-only mark (e.g. favicon-style spots) */}
       {showText && (
         <span className={`font-display text-lg font-semibold ${textClassName}`}>Sahal Stay</span>
       )}

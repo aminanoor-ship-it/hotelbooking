@@ -6,8 +6,13 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const ACCEPT_ATTR = '.jpg,.jpeg,.png,.webp'
 const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
 
+// Image picker/uploader for hotel forms. Props: value (current image path/URL),
+// initialValue (the originally saved image, used to avoid deleting it during cleanup),
+// onChange (called with the new image URL, or '' on removal).
+// Side effects: uploads files to the backend via POST and deletes orphaned session
+// uploads via DELETE when replaced/removed/unmounted-without-save.
 export default function ImageUpload({ value, initialValue, onChange }) {
-  const inputRef = useRef(null)
+  const inputRef = useRef(null) // ref to the hidden <input type="file"> so custom buttons can trigger it
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
 
@@ -22,6 +27,9 @@ export default function ImageUpload({ value, initialValue, onChange }) {
     }
   }
 
+  // Handles the native file input's change event: validates type/size, uploads
+  // the file, updates the parent form via onChange, then cleans up the previous
+  // session-only upload (if any) now that it's been replaced.
   async function handleSelect(event) {
     const file = event.target.files?.[0]
     event.target.value = '' // allow re-selecting the same file later
@@ -53,18 +61,22 @@ export default function ImageUpload({ value, initialValue, onChange }) {
     }
   }
 
+  // Clears the selected image and deletes the now-orphaned session upload (if any).
   async function handleRemove() {
     const previous = value
     onChange('')
     await cleanupSessionUpload(previous)
   }
 
+  // Resolves the stored (possibly relative) path into a full displayable image URL
   const previewSrc = resolveImageUrl(value)
 
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm text-ink/70">Hotel image</span>
 
+      {/* Conditional rendering: show the preview + replace/remove controls once an image
+          exists, otherwise show the empty-state upload dropzone button */}
       {previewSrc ? (
         <div className="relative overflow-hidden rounded-2xl border border-ink/10">
           <img src={previewSrc} alt="Hotel preview" className="h-40 w-full object-cover" />

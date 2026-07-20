@@ -1,6 +1,8 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../context/useAuth'
 
+// Route guard: renders `children` only for signed-in users with the Admin role.
+// Redirects guests to /login and non-admin users back to the home page.
 export default function RequireAdmin({ children }) {
   const { user, loading } = useAuth()
 

@@ -1,3 +1,4 @@
+// Arrow icon used for nav/carousel controls; flips horizontally when direction="left"
 export function ArrowIcon({ className = 'h-4 w-4', direction = 'right' }) {
   return (
     <svg
@@ -17,6 +18,7 @@ export function ArrowIcon({ className = 'h-4 w-4', direction = 'right' }) {
   )
 }
 
+// Play button triangle icon (e.g. for video thumbnails)
 export function PlayIcon({ className = 'h-4 w-4' }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -25,6 +27,7 @@ export function PlayIcon({ className = 'h-4 w-4' }) {
   )
 }
 
+// Decorative sparkle/star icon
 export function SparkleIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -33,6 +36,7 @@ export function SparkleIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Chat bubble icon (e.g. for support/messaging features)
 export function ChatIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -47,6 +51,7 @@ export function ChatIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Support/help icon (target-like circles with corner ticks)
 export function SupportIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -57,6 +62,7 @@ export function SupportIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Guests/people icon (two overlapping person silhouettes)
 export function GuestsIcon({ className = 'h-6 w-6' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -68,6 +74,7 @@ export function GuestsIcon({ className = 'h-6 w-6' }) {
   )
 }
 
+// Open-eye icon, typically used to toggle "show password"
 export function EyeIcon({ className = 'h-4 w-4' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -83,6 +90,7 @@ export function EyeIcon({ className = 'h-4 w-4' }) {
   )
 }
 
+// Crossed-out eye icon, typically used to toggle "hide password"
 export function EyeOffIcon({ className = 'h-4 w-4' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -97,7 +105,10 @@ export function EyeOffIcon({ className = 'h-4 w-4' }) {
   )
 }
 
+// Renders one of several social-network logo icons, selected by the `name` prop
+// (e.g. "facebook", "instagram", "twitter"); path data undefined for unknown names.
 export function SocialIcon({ name, className = 'h-4 w-4' }) {
+  // SVG path data keyed by social network name
   const paths = {
     facebook: 'M13 22v-8h2.7l.4-3H13V9c0-.9.2-1.5 1.5-1.5H16V4.9c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7V11H8v3h2.3v8H13Z',
     instagram:

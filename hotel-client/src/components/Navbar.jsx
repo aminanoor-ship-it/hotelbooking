@@ -5,17 +5,22 @@ import Logo from './ui/Logo'
 import { useAuth } from '../context/useAuth'
 import { navLinks } from '../data/content'
 
+// Site header/navigation bar. Shows nav links, auth-aware account actions, and a mobile hamburger menu.
+// Reads the current user from auth context so it can render logged-in vs logged-out states.
 export default function Navbar() {
+  // Tracks whether the mobile dropdown menu is expanded.
   const [open, setOpen] = useState(false)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
+  // Logs the user out, closes the mobile menu, then redirects to the home page.
   async function handleLogout() {
     await logout()
     setOpen(false)
     navigate('/')
   }
 
+  // Extra nav links only shown when logged in; admins additionally get an Admin link.
   const accountLinks = user
     ? [
         { label: 'My Bookings', to: '/my-bookings' },
@@ -30,6 +35,7 @@ export default function Navbar() {
           <Logo textClassName="text-ink" />
         </Link>
 
+        {/* Desktop nav: static nav links plus any auth-dependent account links. */}
         <ul className="hidden items-center gap-8 text-sm font-medium text-ink/80 md:flex">
           {[...navLinks, ...accountLinks].map((link) =>
             link.to ? (
@@ -48,6 +54,7 @@ export default function Navbar() {
           )}
         </ul>
 
+        {/* Desktop auth controls: greeting + logout when signed in, otherwise login/signup links. */}
         <div className="hidden items-center gap-4 md:flex">
           {user ? (
             <>
@@ -68,6 +75,7 @@ export default function Navbar() {
           )}
         </div>
 
+        {/* Hamburger toggle, only visible on mobile breakpoints. */}
         <button
           className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 md:hidden"
           onClick={() => setOpen((v) => !v)}
@@ -78,6 +86,7 @@ export default function Navbar() {
         </button>
       </nav>
 
+      {/* Mobile dropdown menu, only rendered while `open` is true. */}
       {open && (
         <div className="border-t border-ink/5 px-6 pb-6 md:hidden">
           <ul className="flex flex-col gap-4 pt-4 text-sm font-medium text-ink/80">

@@ -1,3 +1,5 @@
+// Static marketing/site copy for the public-facing pages (nav, hero, about, etc.).
+// `to` links are internal routes (React Router), `href` links are plain anchors/hashes.
 export const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'Hotels', to: '/hotels' },
@@ -5,13 +7,16 @@ export const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ]
 
+// Partner/brand names shown in a logo strip.
 export const partners = ['SUNSTAY', 'VOYAGECO', 'NOMAD', 'WANDERLUST', 'TRAVELINE']
 
+// Hero section background image.
 export const heroImage = {
   src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80',
   alt: 'Luxury hotel resort with pool at sunset',
 }
 
+// Stat highlights shown in the "About" section.
 export const aboutStats = [
   { value: '48%', label: 'of guests rebook their next trip with us within a year' },
   { value: '26%', label: 'faster average booking time than other platforms' },
@@ -28,6 +33,7 @@ export const aboutImages = [
   },
 ]
 
+// Steps shown in the "how it works" section, in display order (numbered 01-03).
 export const processSteps = [
   {
     number: '01',
@@ -51,6 +57,7 @@ export const processImage = {
   alt: 'Modern hotel room with a comfortable bed',
 }
 
+// Content for the featured-hotels carousel/showcase section, including its slide images.
 export const showcase = {
   eyebrow: 'Featured stays',
   title: 'A quick glance at our favorite hotels',
@@ -80,6 +87,8 @@ export const showcase = {
   ],
 }
 
+// Feature highlight cards; `icon` keys map to components via src/components/ui/featureIcons.js.
+// `elevated` marks the middle card for a raised/emphasized visual treatment.
 export const features = [
   {
     icon: 'chat',
@@ -100,6 +109,7 @@ export const features = [
   },
 ]
 
+// Link groups rendered in the site footer, one column per group.
 export const footerColumns = [
   {
     title: 'Pages',
@@ -127,6 +137,7 @@ export const footerColumns = [
   },
 ]
 
+// Contact details shown in the footer/contact section.
 export const contactInfo = {
   address: '128 Ocean Drive, Malibu, CA 90265',
   phone: '+1 (555) 210-7788',
