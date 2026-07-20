@@ -1,232 +1,214 @@
-# Hotel Booking System
+# 🏨 Horizon Stays — Hotel Booking System
 
-A full-stack hotel booking application with a .NET 8 Web API backend and a React + Vite frontend.
+<p align="center">
+  <strong>A modern full-stack platform for discovering rooms, managing reservations, and administering hotel operations.</strong>
+</p>
 
-## Project Structure
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/ASP.NET_Core-8-512BD4?logo=dotnet&logoColor=white" alt="ASP.NET Core">
+  <img src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/Auth-JWT-black?logo=jsonwebtokens" alt="JWT">
+  <img src="https://img.shields.io/badge/License-MIT-success" alt="MIT">
+</p>
 
+## 📖 About
+
+Horizon Stays is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
+
+## ✨ Features
+
+### Guest
+
+- Register and sign in securely
+- Search available rooms by stay dates and guest capacity
+- View room details and prices
+- Book rooms with automatic total-price calculation
+- View personal booking history
+- Cancel eligible pending bookings
+
+### Administrator
+
+- View dashboard statistics
+- Add, update, and delete rooms
+- Approve or reject bookings
+- View and manage registered users
+- Review booking and income reports
+
+## 🧰 Tech Stack
+
+| Area | Technologies |
+|---|---|
+| Frontend | React 19, Vite, React Router DOM, Axios |
+| Backend | .NET 8, ASP.NET Core Web API |
+| Database | MySQL 8 |
+| Data access | Entity Framework Core, Pomelo MySQL |
+| Authentication | ASP.NET Core Identity, JWT |
+| API documentation | Swagger / OpenAPI |
+| Mapping | AutoMapper |
+
+## 🏗️ Architecture
+
+```text
+React + Vite Client
+        │ HTTP / JSON
+        ▼
+ASP.NET Core Web API
+        ├── Identity + JWT
+        ├── Business Logic
+        └── Entity Framework Core
+                    │
+                    ▼
+                  MySQL
 ```
+
+## 📁 Project Structure
+
+```text
 hotelbooking/
-├── HotelBookingAPI/          # .NET 8 Web API
+├── HotelBookingAPI/
 │   └── HotelBookingAPI/
 │       ├── Controllers/      # API endpoints
 │       ├── Data/             # EF Core DbContext
 │       ├── Migrations/       # Database migrations
 │       ├── Models/           # Entity models
-│       └── Program.cs        # App configuration
-│
-└── hotel-client/             # React + Vite frontend
-    ├── src/
+│       └── Program.cs        # Application configuration
+└── hotel-client/
+    ├── src/                  # React source files
     └── package.json
 ```
 
-## Tech Stack
-
-- **Backend:** .NET 8, ASP.NET Core Web API, Entity Framework Core, MySQL (Pomelo)
-- **Frontend:** React 19, Vite, React Router DOM, Axios
-- **Authentication:** ASP.NET Core Identity + JWT Bearer tokens
-- **API Documentation:** Swashbuckle (Swagger)
-
-## Prerequisites
-
-Before you begin, make sure you have the following installed:
+## ✅ Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js](https://nodejs.org/) (LTS recommended, includes npm)
-- [MySQL Server](https://dev.mysql.com/downloads/mysql/) (version 8.0+ recommended)
-- (Optional) [Git](https://git-scm.com/) for version control
+- [Node.js](https://nodejs.org/) — LTS recommended
+- [MySQL Server](https://dev.mysql.com/downloads/mysql/) — 8.0 or later
+- [Git](https://git-scm.com/)
 
-## Installed Packages
+## 🚀 Installation
 
-### Backend NuGet Packages (`HotelBookingAPI/HotelBookingAPI.csproj`)
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `AutoMapper` | 16.1.1 | Object mapping |
-| `Microsoft.AspNetCore.Authentication.JwtBearer` | 8.0.0 | JWT authentication |
-| `Microsoft.AspNetCore.Identity.EntityFrameworkCore` | 8.0.0 | ASP.NET Core Identity |
-| `Microsoft.EntityFrameworkCore` | 8.0.0 | Entity Framework Core ORM |
-| `Microsoft.EntityFrameworkCore.Design` | 8.0.0 | EF Core design-time tools |
-| `Microsoft.EntityFrameworkCore.Tools` | 8.0.0 | EF Core CLI tools |
-| `Pomelo.EntityFrameworkCore.MySql` | 8.0.0 | MySQL provider for EF Core |
-| `Swashbuckle.AspNetCore` | 8.0.0 | Swagger/OpenAPI documentation |
-
-### Frontend npm Packages (`hotel-client/package.json`)
-
-**Dependencies:**
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `axios` | ^1.18.0 | HTTP client for API calls |
-| `react` | ^19.2.6 | UI library |
-| `react-dom` | ^19.2.6 | React DOM renderer |
-| `react-router-dom` | ^7.18.0 | Client-side routing |
-
-**Development Dependencies:**
-
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `@eslint/js` | ^10.0.1 | ESLint core config |
-| `@types/react` | ^19.2.14 | TypeScript definitions for React |
-| `@types/react-dom` | ^19.2.3 | TypeScript definitions for React DOM |
-| `@vitejs/plugin-react` | ^6.0.1 | Vite plugin for React |
-| `eslint` | ^10.3.0 | JavaScript/JSX linter |
-| `eslint-plugin-react-hooks` | ^7.1.1 | ESLint rules for React Hooks |
-| `eslint-plugin-react-refresh` | ^0.5.2 | ESLint rules for React Fast Refresh |
-| `globals` | ^17.6.0 | Global variable definitions for ESLint |
-| `vite` | ^8.0.12 | Frontend build tool |
-
-## Installation
-
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
-git clone <your-github-repo-url>
+git clone https://github.com/aminanoor-ship-it/hotelbooking.git
 cd hotelbooking
 ```
 
-### 2. Install Backend Packages
-
-From the API project folder:
+### 2. Restore backend packages
 
 ```bash
 cd HotelBookingAPI/HotelBookingAPI
 dotnet restore
 ```
 
-This downloads all NuGet packages listed in `HotelBookingAPI.csproj`.
-
-### 3. Install Frontend Packages
-
-From the client folder:
+### 3. Install frontend packages
 
 ```bash
 cd ../../hotel-client
 npm install
 ```
 
-This installs all dependencies listed in `package.json`.
+## ⚙️ Configuration
 
-## Configuration
+Use ASP.NET Core User Secrets for sensitive local configuration. **Never commit passwords, connection strings, or JWT keys.**
 
-The API uses ASP.NET Core User Secrets to store sensitive configuration locally. **Do not commit secrets to Git.**
+From `HotelBookingAPI/HotelBookingAPI`:
 
-1. Navigate to the API project directory:
+```bash
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Port=3306;Database=hotelbooking;User=root;Password=YOUR_DB_PASSWORD;"
+dotnet user-secrets set "Jwt:Key" "REPLACE_WITH_A_SECURE_KEY_AT_LEAST_32_CHARACTERS"
+dotnet user-secrets set "Jwt:Issuer" "HotelBookingAPI"
+dotnet user-secrets set "Jwt:Audience" "HotelClient"
+```
 
-   ```bash
-   cd HotelBookingAPI/HotelBookingAPI
-   ```
+## 🗄️ Database Setup
 
-2. Initialize user secrets (if not already done):
+Make sure MySQL is running, then apply the migrations:
 
-   ```bash
-   dotnet user-secrets init
-   ```
+```bash
+cd HotelBookingAPI/HotelBookingAPI
+dotnet ef database update
+```
 
-3. Set your real connection string and JWT values:
+If necessary, install the EF CLI first:
 
-   ```bash
-   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Port=3306;Database=hotelbooking;User=root;Password=YOUR_DB_PASSWORD;"
-   dotnet user-secrets set "Jwt:Key" "REPLACE_WITH_YOUR_OWN_SECURE_KEY_AT_LEAST_32_CHARS"
-   dotnet user-secrets set "Jwt:Issuer" "HotelBookingAPI"
-   dotnet user-secrets set "Jwt:Audience" "HotelClient"
-   ```
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-4. Verify the secrets are stored:
+## ▶️ Run the Application
 
-   ```bash
-   dotnet user-secrets list
-   ```
-
-The committed `appsettings.json` contains placeholder values only.
-
-## Database Setup
-
-1. Make sure MySQL is running.
-
-2. Apply the existing EF Core migrations to create the database:
-
-   ```bash
-   cd HotelBookingAPI/HotelBookingAPI
-   dotnet ef database update
-   ```
-
-   > If you don't have the `dotnet-ef` tool installed globally, install it with:
-   > ```bash
-   > dotnet tool install --global dotnet-ef
-   > ```
-
-The first run will automatically seed an admin user.
-
-## Running the Application
-
-### Run the Backend
+### Backend
 
 ```bash
 cd HotelBookingAPI/HotelBookingAPI
 dotnet run
 ```
 
-The API will start on `https://localhost:7001` and `http://localhost:5001` by default (check console output for the exact URLs).
+Check the terminal for the exact address. Swagger is normally available at:
 
-Swagger UI is available in development mode at:
-
-```
+```text
 https://localhost:7001/swagger
 ```
 
-### Run the Frontend
+### Frontend
 
-In a new terminal:
+Open another terminal:
 
 ```bash
 cd hotel-client
 npm run dev
 ```
 
-The React app will start at:
+Open `http://localhost:5173`.
 
-```
-http://localhost:5173
-```
+## 🔐 Default Development Administrator
 
-The API is already configured to accept requests from this origin via CORS.
+| Field | Value |
+|---|---|
+| Email | `admin@hotel.com` |
+| Password | `Admin123!` |
+| Role | `Admin` |
 
-## Default Admin User
+> Change or remove these development credentials before deployment.
 
-On first startup, the API seeds an administrator account:
+## 🛡️ Security
 
-- **Email:** `admin@hotel.com`
-- **Password:** `Admin123!`
-- **Role:** `Admin`
+- Store real secrets in User Secrets or environment variables.
+- ASP.NET Core Identity handles password management.
+- JWT and role authorization protect restricted API endpoints.
+- Use HTTPS and secure cookie settings in production.
+- Never commit `bin/`, `obj/`, `dist/`, `node_modules/`, or `.vs/`.
 
-> Change these credentials in production.
+## 🧪 Useful Commands
 
-## Important Notes
-
-- **Never commit secrets.** `appsettings.json` in the repo should only contain placeholder values. Real values live in User Secrets.
-- The frontend expects the API to be running on the default .NET dev URLs.
-- The JWT token is read from an `access_token` cookie in the current implementation.
-- Make sure MySQL is running before starting the backend.
-- Build artifacts (`bin/`, `obj/`, `dist/`, `node_modules/`, `.vs/`) are excluded by `.gitignore`.
-
-## Scripts Reference
-
-### Backend
-
-| Command | Description |
-|---------|-------------|
-| `dotnet restore` | Restore NuGet packages |
+| Command | Purpose |
+|---|---|
 | `dotnet build` | Build the API |
 | `dotnet run` | Run the API |
-| `dotnet ef database update` | Apply database migrations |
-| `dotnet ef migrations add <Name>` | Add a new migration |
-
-### Frontend
-
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies |
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
+| `dotnet ef database update` | Apply migrations |
+| `npm run dev` | Start the React client |
+| `npm run build` | Build the frontend |
 | `npm run lint` | Run ESLint |
+
+## 🗺️ Roadmap
+
+- [ ] Add polished application screenshots
+- [ ] Add the database ERD
+- [ ] Add automated tests
+- [ ] Add continuous integration
+- [ ] Deploy a live demo
+
+## 🤝 Contributing
+
+Suggestions and contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a change.
+
+## 👩‍💻 Author
+
+**Amina Noor Abdi** — [@aminanoor-ship-it](https://github.com/aminanoor-ship-it)
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE).
