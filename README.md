@@ -1,4 +1,4 @@
-# 🏨 Horizon Stays — Hotel Booking System
+# 🏨 Sahal Stay — Hotel Booking System
 
 <p align="center">
   <strong>A modern full-stack platform for discovering rooms, managing reservations, and administering hotel operations.</strong>
@@ -10,12 +10,16 @@
   <img src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" alt="MySQL">
   <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/Auth-JWT-black?logo=jsonwebtokens" alt="JWT">
-  <img src="https://img.shields.io/badge/License-MIT-success" alt="MIT">
+  
+</p>
+
+<p align="center">
+  <img src="docs/images/sahal-stay-homepage.webp" alt="Sahal Stay hotel booking homepage" width="100%">
 </p>
 
 ## 📖 About
 
-Horizon Stays is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
+Sahal Stay is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
 
 ## ✨ Features
 
@@ -208,7 +212,3 @@ Suggestions and contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 ## 👩‍💻 Author
 
 **Amina Noor Abdi** — [@aminanoor-ship-it](https://github.com/aminanoor-ship-it)
-
-## 📄 License
-
-Licensed under the [MIT License](LICENSE).
