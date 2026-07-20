@@ -1,4 +1,4 @@
-# 🏨 Horizon Stays — Hotel Booking System
+# 🏨 Sahal Stay — Hotel Booking System
 
 <p align="center">
   <strong>A modern full-stack platform for discovering rooms, managing reservations, and administering hotel operations.</strong>
@@ -15,7 +15,7 @@
 
 ## 📖 About
 
-Horizon Stays is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
+Sahal Stay is a full-stack hotel booking application built with a **.NET 8 Web API**, **React**, and **MySQL**. Guests can find rooms and manage reservations, while administrators manage rooms, bookings, users, and reports through a dedicated dashboard.
 
 ## ✨ Features
 
