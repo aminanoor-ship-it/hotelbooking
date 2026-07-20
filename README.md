@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" alt="MySQL">
   <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/Auth-JWT-black?logo=jsonwebtokens" alt="JWT">
-  <img src="https://img.shields.io/badge/License-MIT-success" alt="MIT">
+  
 </p>
 
 <p align="center">
