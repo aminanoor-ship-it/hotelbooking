@@ -212,7 +212,3 @@ Suggestions and contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.m
 ## 👩‍💻 Author
 
 **Amina Noor Abdi** — [@aminanoor-ship-it](https://github.com/aminanoor-ship-it)
-
-## 📄 License
-
-Licensed under the [MIT License](LICENSE).
