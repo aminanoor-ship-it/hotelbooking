@@ -34,7 +34,7 @@ Horizon Stays is a full-stack hotel booking application built with a **.NET 8 We
 - Add, update, and delete rooms
 - Approve or reject bookings
 - View and manage registered users
-- Review booking and income reports
+- Review booking 
 
 ## 🧰 Tech Stack
 
